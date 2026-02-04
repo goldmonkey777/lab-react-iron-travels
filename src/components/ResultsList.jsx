@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import FiltersBar from "./FiltersBar";
 import ExperienceList from "./ExperienceList";
 import Favorites from "./Favorites";
-import { experiences } from "../data";
+import { experiences as initialExperiences } from "../data";
 export default function ResultsList() {
   const [favorites, setFavorites] = useState([]);
   const [view, setView] = useState("all");
+  const [experiences, setExperiences] = useState(initialExperiences);
   const [, setFilters] = useState({ sort: "price", airline: "all", stops: "all" });
 
   const toggleFavorite = (id) => {
@@ -16,6 +17,11 @@ export default function ResultsList() {
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleDeleteExperience = (id) => {
+    setExperiences((prev) => prev.filter((exp) => exp.id !== id));
+    setFavorites((prev) => prev.filter((fid) => fid !== id));
   };
 
   return (
@@ -32,6 +38,7 @@ export default function ResultsList() {
           experiences={experiences}
           favorites={favorites}
           onToggleFavorite={toggleFavorite}
+          onDelete={handleDeleteExperience}
         />
       </>}
       {view === "favorites" && (
